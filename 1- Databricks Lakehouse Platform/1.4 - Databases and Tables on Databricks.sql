@@ -4,7 +4,7 @@
 
 -- COMMAND ----------
 
-USE CATALOG hive_metastore;
+USE CATALOG udemy;
 
 CREATE TABLE managed_default
   (width INT, length INT, height INT);
@@ -24,6 +24,7 @@ DESCRIBE EXTENDED managed_default
 
 -- COMMAND ----------
 
+use catalog hive_metastore;
 CREATE TABLE external_default
   (width INT, length INT, height INT)
 LOCATION 'dbfs:/mnt/demo/external_default';
@@ -64,11 +65,24 @@ DROP TABLE external_default
 
 -- COMMAND ----------
 
+use catalog hive_metastore;
 CREATE SCHEMA new_default
+-- creates a new database. 
 
 -- COMMAND ----------
 
 DESCRIBE DATABASE EXTENDED new_default
+
+-- COMMAND ----------
+
+USE new_default;
+
+CREATE TABLE IF NOT EXISTS managed_new_default
+  (width INT, length INT, height INT);
+  
+INSERT INTO managed_new_default
+VALUES (3 INT, 2 INT, 1 INT);
+
 
 -- COMMAND ----------
 
@@ -80,7 +94,11 @@ CREATE TABLE managed_new_default
 INSERT INTO managed_new_default
 VALUES (3 INT, 2 INT, 1 INT);
 
------------------------------------
+-- COMMAND ----------
+
+DESCRIBE EXTENDED managed_new_default
+
+-- COMMAND ----------
 
 CREATE TABLE external_new_default
   (width INT, length INT, height INT)
@@ -89,9 +107,6 @@ LOCATION 'dbfs:/mnt/demo/external_new_default';
 INSERT INTO external_new_default
 VALUES (3 INT, 2 INT, 1 INT);
 
--- COMMAND ----------
-
-DESCRIBE EXTENDED managed_new_default
 
 -- COMMAND ----------
 
@@ -146,10 +161,12 @@ VALUES (3 INT, 2 INT, 1 INT);
 -- COMMAND ----------
 
 DESCRIBE EXTENDED managed_custom
+-- location dbfs:/Shared/schemas/custom.db/managed_custom
 
 -- COMMAND ----------
 
 DESCRIBE EXTENDED external_custom
+-- location: dbfs:/mnt/demo/external_custom
 
 -- COMMAND ----------
 

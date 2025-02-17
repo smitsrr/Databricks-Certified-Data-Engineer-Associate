@@ -11,7 +11,7 @@
 
 -- COMMAND ----------
 
-SELECT * FROM orders
+SELECT count(*) FROM orders limit 10
 
 -- COMMAND ----------
 

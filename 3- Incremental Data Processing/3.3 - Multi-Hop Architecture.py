@@ -28,6 +28,8 @@ display(files)
 
 # COMMAND ----------
 
+# creates the stream to create temporary view so we can do transforms on the view. 
+# This command creates it, but doesn't activate it until we do 'display' or 'write stream' operation
 (spark.readStream
     .format("cloudFiles")
     .option("cloudFiles.format", "parquet")
@@ -68,6 +70,8 @@ display(files)
       .outputMode("append")
       .table("orders_bronze"))
 
+#incremental write to delta table
+
 # COMMAND ----------
 
 # MAGIC %sql
@@ -89,6 +93,7 @@ load_new_data()
       .format("json")
       .load(f"{dataset_bookstore}/customers-json")
       .createOrReplaceTempView("customers_lookup"))
+# static lookup table to enrich orders
 
 # COMMAND ----------
 
@@ -116,6 +121,13 @@ load_new_data()
 # MAGIC   INNER JOIN customers_lookup c
 # MAGIC   ON o.customer_id = c.customer_id
 # MAGIC   WHERE quantity > 0)
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC select *
+# MAGIC from orders_enriched_tmp
+# MAGIC limit 20
 
 # COMMAND ----------
 
@@ -150,6 +162,7 @@ load_new_data()
 (spark.readStream
   .table("orders_silver")
   .createOrReplaceTempView("orders_silver_tmp"))
+  # create streaming temporary view
 
 # COMMAND ----------
 
@@ -162,6 +175,7 @@ load_new_data()
 
 # COMMAND ----------
 
+# write to a gold table
 (spark.table("daily_customer_books_tmp")
       .writeStream
       .format("delta")
@@ -173,17 +187,27 @@ load_new_data()
 # COMMAND ----------
 
 # MAGIC %sql
+# MAGIC describe extended daily_customer_books_tmp
+
+# COMMAND ----------
+
+# MAGIC %sql
 # MAGIC SELECT * FROM daily_customer_books
 
 # COMMAND ----------
 
-load_new_data()
+load_new_data(all=True)
 
 # COMMAND ----------
 
 # MAGIC %md
 # MAGIC
 # MAGIC ## Stopping active streams
+
+# COMMAND ----------
+
+for s in spark.streams.active:
+    print(f"ID: {s.id}, Name: {s.name}, IsActive: {s.isActive}, Status: {s.status}")
 
 # COMMAND ----------
 

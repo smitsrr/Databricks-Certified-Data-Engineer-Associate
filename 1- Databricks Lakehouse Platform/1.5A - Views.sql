@@ -44,6 +44,7 @@ SELECT * FROM view_apple_phones;
 -- COMMAND ----------
 
 SHOW TABLES;
+describe hive_metastore.default.view_apple_phones;
 
 -- COMMAND ----------
 

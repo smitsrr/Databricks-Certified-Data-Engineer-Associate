@@ -35,6 +35,10 @@
 
 # COMMAND ----------
 
+spark.sql("DESCRIBE EXTENDED books_streaming_tmp_vw")
+
+# COMMAND ----------
+
 # MAGIC %md
 # MAGIC ## Applying Transformations
 
@@ -72,6 +76,7 @@
 # MAGIC   FROM books_streaming_tmp_vw
 # MAGIC   GROUP BY author
 # MAGIC )
+# MAGIC -- still a streaming temporary view
 
 # COMMAND ----------
 
@@ -82,12 +87,16 @@
       .option("checkpointLocation", "dbfs:/mnt/demo/author_counts_checkpoint")
       .table("author_counts")
 )
+# loads into a streaming data frame. persists the data to a table
+# writes every 4 seconds
+# this is an 'always on' incremental query
 
 # COMMAND ----------
 
 # MAGIC %sql
 # MAGIC SELECT *
 # MAGIC FROM author_counts
+# MAGIC -- this queries from the persistent table
 
 # COMMAND ----------
 
@@ -125,6 +134,8 @@
       .table("author_counts")
       .awaitTermination()
 )
+# all new available data, stop when new data is complete
+
 
 # COMMAND ----------
 

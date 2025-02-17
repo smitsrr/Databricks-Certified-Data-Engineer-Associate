@@ -5,7 +5,7 @@
 
 -- COMMAND ----------
 
-USE CATALOG hive_metastore
+USE CATALOG udemy
 
 -- COMMAND ----------
 
@@ -65,7 +65,7 @@ DESCRIBE HISTORY employees
 
 -- COMMAND ----------
 
--- MAGIC %fs ls 'dbfs:/user/hive/warehouse/employees'
+-- MAGIC %fs ls 'abfss://unity-catalog-storage@dbstoragelzj3l6wosuwme.dfs.core.windows.net/1253315379013518/__unitystorage/catalogs/89506433-8a72-4bd0-aa77-f01c936de45c/tables/5bf32a91-fe23-4db7-8994-2e908e9be76a'
 
 -- COMMAND ----------
 

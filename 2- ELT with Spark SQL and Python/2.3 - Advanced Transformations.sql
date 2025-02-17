@@ -18,6 +18,7 @@
 -- COMMAND ----------
 
 SELECT * FROM customers
+limit 10
 
 -- COMMAND ----------
 
@@ -53,7 +54,8 @@ DESCRIBE parsed_customers
 
 -- COMMAND ----------
 
-SELECT customer_id, profile_struct.first_name, profile_struct.address.country
+SELECT customer_id, profile_struct.first_name, profile_struct.address.country, 
+  profile_struct.address.*
 FROM parsed_customers
 
 -- COMMAND ----------
@@ -78,6 +80,7 @@ FROM orders
 
 SELECT order_id, customer_id, explode(books) AS book 
 FROM orders
+-- put each element of an array on it's own row
 
 -- COMMAND ----------
 
@@ -102,7 +105,7 @@ GROUP BY customer_id
 
 SELECT customer_id,
   collect_set(books.book_id) As before_flatten,
-  array_distinct(flatten(collect_set(books.book_id))) AS after_flatten
+  sort_array(array_distinct(flatten(collect_set(books.book_id)))) AS after_flatten
 FROM orders
 GROUP BY customer_id
 
@@ -136,19 +139,19 @@ AS SELECT * FROM parquet.`${dataset.bookstore}/orders-new`;
 
 SELECT * FROM orders 
 UNION 
-SELECT * FROM orders_updates 
+SELECT *, current_timestamp FROM orders_updates 
 
 -- COMMAND ----------
 
 SELECT * FROM orders 
 INTERSECT 
-SELECT * FROM orders_updates 
+SELECT *, current_timestamp FROM orders_updates 
 
 -- COMMAND ----------
 
 SELECT * FROM orders 
 MINUS 
-SELECT * FROM orders_updates 
+SELECT *, current_timestamp FROM orders_updates 
 
 -- COMMAND ----------
 

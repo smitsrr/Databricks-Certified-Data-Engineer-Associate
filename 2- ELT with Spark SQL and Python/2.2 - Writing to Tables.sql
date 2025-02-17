@@ -35,6 +35,9 @@ DESCRIBE HISTORY orders
 -- COMMAND ----------
 
 INSERT OVERWRITE orders
+-- identical output from above. 
+-- can only overwrite an existing table
+-- new data must match existing schema
 SELECT * FROM parquet.`${dataset.bookstore}/orders`
 
 -- COMMAND ----------
@@ -54,7 +57,7 @@ SELECT *, current_timestamp() FROM parquet.`${dataset.bookstore}/orders`
 -- COMMAND ----------
 
 INSERT INTO orders
-SELECT * FROM parquet.`${dataset.bookstore}/orders-new`
+SELECT *, current_timestamp FROM parquet.`${dataset.bookstore}/orders-new`
 
 -- COMMAND ----------
 

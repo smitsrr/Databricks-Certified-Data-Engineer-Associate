@@ -22,11 +22,11 @@
 
 -- COMMAND ----------
 
-SELECT * FROM json.`${dataset.bookstore}/customers-json/export_001.json`
+SELECT * FROM json.`${dataset.bookstore}/customers-json/export_001.json`;
 
 -- COMMAND ----------
 
-SELECT * FROM json.`${dataset.bookstore}/customers-json/export_*.json`
+SELECT count(*) FROM json.`${dataset.bookstore}/customers-json/export_*.json`
 
 -- COMMAND ----------
 
